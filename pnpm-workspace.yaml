@@ -1,4 +1,18 @@
 packages:
-  - "packages/*"
-  - "playgrounds/*"
-  - "templates/*"
+  - packages/*
+  - playgrounds/*
+  - templates/*
+
+patchedDependencies:
+  radix3@1.1.2: patches/radix3@1.1.2.patch
+
+shamefullyHoist: true
+
+allowBuilds:
+  "@parcel/watcher": true
+  esbuild: true
+  sharp: true
+  vue-demi: true
+  workerd: true
+
+dedupePeers: true

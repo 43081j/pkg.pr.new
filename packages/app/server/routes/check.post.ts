@@ -1,0 +1,80 @@
+export default eventHandler(async (event) => {
+  try {
+    const data = await readRawBody(event);
+    const workflowsBucket = useWorkflowsBucket(event);
+
+    const { owner, repo, key } = JSON.parse(data!);
+
+    const app = useOctokitApp(event);
+
+    let authenticated = false;
+
+    try {
+      await app.octokit.request("GET /repos/{owner}/{repo}/installation", {
+        owner,
+        repo,
+      });
+      authenticated = true;
+    } catch {}
+
+    if (!authenticated) {
+      try {
+        const { data: installation } = await app.octokit.request(
+          "GET /orgs/{org}/installation",
+          { org: owner },
+        );
+        const installationOctokit = await app.getInstallationOctokit(
+          installation.id,
+        );
+        await installationOctokit.request("GET /repos/{owner}/{repo}", {
+          owner,
+          repo,
+        });
+        authenticated = true;
+      } catch {}
+    }
+
+    if (!authenticated) {
+      throw createError({
+        statusCode: 404,
+        fatal: true,
+        message: `The app https://github.com/apps/pkg-pr-new is not installed on or does not have access to ${owner}/${repo}.`,
+      });
+    }
+
+    const workflowData = await workflowsBucket.getItem(key);
+
+    if (!workflowData) {
+      throw createError({
+        statusCode: 404,
+        fatal: true,
+        message: `There is no workflow defined for ${key}`,
+      });
+    }
+    return { sha: workflowData.sha };
+  } catch (error: unknown) {
+    console.error("Check route error:", error);
+
+    if (error && typeof error === "object" && "statusCode" in error) {
+      throw error;
+    }
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : "An unexpected error occurred during check";
+    const stack = error instanceof Error ? error.stack : undefined;
+
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Internal Server Error",
+      data: {
+        error: true,
+        message,
+        stack,
+        originalError: error,
+        type: "check_error",
+      },
+    });
+  }
+});

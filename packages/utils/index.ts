@@ -1,15 +1,25 @@
 import type { PackageManifest } from "query-registry";
 
 const githubUrlRegex =
-  /(?:git\+)?https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\.git/; // TODO: Don't trust this, it's chatgbd :)
+  /^(?:git\+)?https?:\/\/github\.com\/([^/]+)\/([^/]+)\/?$/;
+const githubShorthandRegex = /^(?:github:)?([^/]+)\/([^/]+)$/;
 
 export function extractOwnerAndRepo(
   repositoryUrl: string,
 ): [string, string] | null {
-  const match = repositoryUrl.match(githubUrlRegex);
+  const match =
+    repositoryUrl.match(githubUrlRegex) ??
+    repositoryUrl.match(githubShorthandRegex);
 
   if (match) {
-    return [match[1], match[2]];
+    let repo = match[2];
+    if (repo.endsWith(".git")) {
+      repo = repo.slice(0, -4);
+    } else if (repo.includes(".git")) {
+      return null;
+    }
+
+    return [match[1], repo];
   }
 
   return null;
@@ -30,14 +40,28 @@ export function abbreviateCommitHash(fullHash: string) {
   return fullHash.substring(0, commitLength);
 }
 
+const sha1Regex = /^[\da-f]{40}$/i;
+const sha256Regex = /^[\da-f]{64}$/i;
+
+export function isValidGitHash(hash: string): boolean {
+  return sha1Regex.test(hash) || sha256Regex.test(hash);
+}
+
 export function isPullRequest(ref: string) {
   return !Number.isNaN(Number(ref));
 }
 
 export type Comment = "off" | "create" | "update";
-export type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
+export type PackageManager = "npm" | "pnpm" | "yarn" | "bun" | "upm" | "nub";
 
-
+export const installCommands: Record<PackageManager, string> = {
+  npm: "npm i",
+  pnpm: "pnpm add",
+  yarn: "yarn add",
+  bun: "bun add",
+  upm: "upm add",
+  nub: "nub add",
+};
 
 const whitelist =
   "https://raw.githubusercontent.com/stackblitz-labs/pkg.pr.new/main/.whitelist";

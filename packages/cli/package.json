@@ -1,6 +1,6 @@
 {
   "name": "pkg-pr-new",
-  "version": "0.0.39",
+  "version": "0.0.93",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -20,18 +20,19 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "@jsdevtools/ez-spawn": "^3.0.4",
-    "@octokit/action": "^6.1.0",
-    "ignore": "^5.3.1",
-    "isbinaryfile": "^5.0.2",
-    "pkg-types": "^1.1.1",
-    "query-registry": "^3.0.1",
-    "tinyglobby": "^0.2.9"
-  },
   "devDependencies": {
+    "@actions/core": "^3.0.1",
+    "@jsdevtools/ez-spawn": "^3.0.4",
     "@pkg-pr-new/utils": "workspace:^",
     "citty": "^0.1.6",
+    "confbox": "^0.2.4",
+    "ignore": "^7.0.5",
+    "isbinaryfile": "5.0.2",
+    "nanotar": "^0.3.0",
+    "ohash": "^1.1.4",
+    "pkg-types": "^2.3.1",
+    "query-registry": "^4.3.0",
+    "tinyglobby": "^0.2.16",
     "tsup": "^8.0.2"
   }
 }

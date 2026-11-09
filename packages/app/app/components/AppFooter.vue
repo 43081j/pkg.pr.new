@@ -1,0 +1,78 @@
+<template>
+  <footer
+    class="safe-footer text-center opacity-100 flex flex-col items-center gap-3 text-xs"
+  >
+    <div
+      class="flex max-w-full flex-wrap gap-x-6 gap-y-3 items-center justify-center"
+    >
+      <div class="flex items-center">
+        <a
+          href="https://blog.stackblitz.com/posts/pkg-pr-new/"
+          target="_blank"
+          class="block"
+        >
+          <img
+            src="/stackblitz.svg"
+            alt="StackBlitz"
+            width="117"
+            height="28"
+            class="not-dark:hidden"
+          />
+          <img
+            src="/stackblitz-black.svg"
+            alt="StackBlitz"
+            width="117"
+            height="28"
+            class="dark:hidden"
+          />
+        </a>
+      </div>
+      <div class="text-xs opacity-70 flex items-center">+</div>
+      <div class="flex items-center">
+        <a
+          href="https://blog.stackblitz.com/posts/cloudflare-backing-pkg-pr-new-data-infrastructure/"
+          target="_blank"
+          class="block"
+        >
+          <img
+            src="/cloudflare.svg"
+            alt="Cloudflare"
+            width="120"
+            height="24"
+            class="pb-1"
+          />
+        </a>
+      </div>
+    </div>
+
+    <div
+      class="flex max-w-full flex-wrap items-center justify-center gap-x-3 gap-y-1"
+    >
+      <div>
+        Built in
+        <a
+          href="https://github.com/stackblitz-labs"
+          target="_blank"
+          class="text-primary"
+          >StackBlitz Labs</a
+        >
+      </div>
+      <UIcon name="ph-dot" class="max-sm:hidden" />
+      <div>
+        <a
+          href="https://blog.stackblitz.com/posts/cloudflare-backing-pkg-pr-new-data-infrastructure/"
+          target="_blank"
+          class="text-primary"
+          >Backed by Cloudflare</a
+        >
+      </div>
+      <UIcon name="ph-dot" class="max-sm:hidden" />
+      <div>
+        UI by
+        <a href="https://github.com/Akryum" target="_blank" class="text-primary"
+          >Akryum</a
+        >
+      </div>
+    </div>
+  </footer>
+</template>
